@@ -1,0 +1,28 @@
+1.去"ubuntu.com"安装桌面版Ubuntu,这里直接跳过!
+2.打开终端输入"apt-get install docker docker.io docker-compose qemu virtualbox "安装virtual box
+3.再次在终端输入"sudo apt-get install xorriso"来安装打包系统
+4.还在终端输入"grub-mkrescue -o kernel_lab.iso iso"来打包系统内核
+5.最后在终端里输入"make kernel_vm"来运行iso里的系统
+最后上虚拟机测试一下即可(由于我这边的电脑坏了,所以这个操作只能上虚拟机测试)
+首先来看一段c代码
+
+int add_x_y(int x,int y){
+	return x+y;
+}
+通过执行"g++ -c test.cpp"以后生成obj文件,然后通过"objdump -d test.o"输出编译后的指令得到
+
+终端出来的:
+Disassembly of section .text:
+
+0000000000000000 <_Z7add_x_yii>:
+   0:	55                   	push   %rbp
+   1:	48 89 e5             	mov    %rsp,%rbp
+   4:	89 7d fc             	mov    %edi,-0x4(%rbp)
+   7:	89 75 f8             	mov    %esi,-0x8(%rbp)
+   a:	8b 55 fc             	mov    -0x4(%rbp),%edx
+   d:	8b 45 f8             	mov    -0x8(%rbp),%eax
+  10:	01 d0                	add    %edx,%eax
+  12:	5d                   	pop    %rbp
+  13:	c3                   	retq   
+"
+从而得到一个程序函数的一个执行过程。学习过操作系统的都了解一个多任务的操作系统中是通过时间轮盘算法来对程序进行调度，使得CPU在不同周期执行着不同的指令，通过汇编代码可以看到每个程序都有着自己的描述符号即LDT局部描述符表来组建对变量和代码之间的符号描述。然而此时还需要一个针对全局的，对计算机运行状态进行控制的全局描述符表GDT（Global Descriptor Table）在整个系统中，全局描述符表GDT只有一张(一个处理器对应一个GDT)，GDT可以被放在内存的任何位置.
